@@ -1,3 +1,7 @@
+/**
+ * Main.java
+ * Program utama untuk menjalankan sistem transaksi perpustakaan.
+ */
 public class Main {
     public static void main(String[] args) {
         System.out.println("=== SISTEM TRANSAKSI PERPUSTAKAAN ===\n");
