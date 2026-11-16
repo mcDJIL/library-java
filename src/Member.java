@@ -23,7 +23,7 @@ public class Member {
     /**
      * Batas maksimum buku yang dapat dipinjam oleh anggota.
      */
-    private static final int MAX_LIMIT = 3;
+    private static final int DEFAULT_LIMIT = 2;
 
     /**
      * Konstruktor untuk membuat anggota baru.
@@ -69,8 +69,17 @@ public class Member {
      *
      * @return Batas maksimum buku yang dapat dipinjam
      */
-    public static int getMaxLimit() {
-        return MAX_LIMIT;
+    public int getMaxLimit() {
+        return DEFAULT_LIMIT;
+    }
+
+    /**
+     * Mendapatkan tipe anggota.
+     *
+     * @return Tipe anggota
+     */
+    public String getType() {
+        return "Umum";
     }
 
     /**
@@ -79,21 +88,17 @@ public class Member {
      * @return true jika anggota dapat meminjam buku, false jika sudah mencapai batas maksimum
      */
     public boolean canBorrow() {
-        return getBorrowedCount() < MAX_LIMIT;
+        return getBorrowedCount() < getMaxLimit();
     }
 
     /**
      * Menambahkan jumlah buku yang sedang dipinjam oleh anggota.
-     *
-     * @return true jika berhasil menambahkan, false jika sudah mencapai batas maksimum
+     * Pastikan borrowedCount tidak melebihi batas maksimum.
      */
-    public boolean incrementBorrowed() {
-        if (this.canBorrow()) {
-            this.borrowedCount++;
-            return true;
+    public void incrementBorrowed() {
+        if (canBorrow()) {
+            borrowedCount++;
         }
-
-        return false;
     }
 
     /**
@@ -102,7 +107,7 @@ public class Member {
      */
     public void decrementBorrowed() {
         if (getBorrowedCount() > 0) {
-            this.borrowedCount--;
+            borrowedCount--;
         }
     }
 
@@ -113,10 +118,7 @@ public class Member {
      */
     @Override
     public String toString() {
-        return "Member{" +
-                "memberId='" + memberId + '\'' +
-                ", name='" + name + '\'' +
-                ", borrowedCount=" + borrowedCount +
-                '}';
+        return "[" + memberId + "] " + name + " (" + getType() + ", dipinjam: "
+                + borrowedCount + "/" + getMaxLimit() + ")";
     }
 }

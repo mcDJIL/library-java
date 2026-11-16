@@ -6,7 +6,7 @@
  * title: Judul buku
  * stock: Jumlah stok buku yang tersedia
  */
-public class Book {
+public abstract class Book {
     /**
      * ID unik untuk buku.
      */
@@ -30,7 +30,7 @@ public class Book {
     public Book(String bookId, String title, int stock) {
         this.bookId = bookId;
         this.title = title;
-        this.stock = stock;
+        this.stock = Math.max(stock, 0);
     }
 
     /**
@@ -67,7 +67,7 @@ public class Book {
      */
     public boolean decreaseStock() {
         if (getStock() > 0) {
-            this.stock--;
+            stock--;
             return true;
         }
 
@@ -80,7 +80,47 @@ public class Book {
      * @return Jumlah stok buku setelah ditambahkan
      */
     public int increaseStock() {
-        return this.stock++;
+        return stock++;
+    }
+
+    /**
+     * Mendapatkan kategori buku. Subclass harus mengimplementasikan metode ini.
+     * 
+     * @return Kategori buku
+     */
+    public abstract String getCategory();
+
+    /**
+     * Mendapatkan jumlah hari peminjaman buku. Subclass harus mengimplementasikan metode ini.
+     *
+     * @return Jumlah hari peminjaman buku
+     */
+    public abstract int getLoanDays();
+
+    /**
+     * Mendapatkan denda per hari keterlambatan. Subclass harus mengimplementasikan metode ini.
+     *
+     * @return Denda per hari keterlambatan
+     */
+    public abstract int getLateFeePerDay();
+
+    /**
+     * Mendapatkan apakah buku dapat dipinjam. Subclass bisa mengganti implementasi ini.
+     *
+     * @return true jika buku dapat dipinjam, false jika tidak
+     */
+    public boolean isBorrowable() {
+        return true;
+    }
+
+    /**
+     * Menghitung denda; memanggil getLateFeePerDay() milik subclass yang sebenarnya.
+     *
+     * @param daysLate Jumlah hari keterlambatan
+     * @return Denda yang harus dibayar
+     */
+    public int calculateLateFee(int daysLate) {
+        return Math.max(daysLate, 0) * getLateFeePerDay();
     }
 
     /**
@@ -90,10 +130,6 @@ public class Book {
      */
     @Override
     public String toString() {
-        return "Book{" +
-                "bookId=" + bookId +
-                ", title='" + title + '\'' +
-                ", stock=" + stock +
-                '}';
+        return "[" + bookId + "] " + title + " (" + getCategory() + ", stok: " + stock + ")";
     }
 }
